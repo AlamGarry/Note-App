@@ -5,5 +5,5 @@
 ## TODO Challenge:
 
 - [x] Add note
-- [ ] Delete note
+- [x] Delete note
 - [ ] Edit note

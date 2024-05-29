@@ -8,10 +8,17 @@ const CurrentPageWidget = ({
   noteList,
   setCurrentPage,
   addNote,
+  deleteNote,
 }) => {
   switch (currentPage) {
     case 'home':
-      return <Home noteList={noteList} setCurrentPage={setCurrentPage} />;
+      return (
+        <Home
+          noteList={noteList}
+          setCurrentPage={setCurrentPage}
+          deleteNote={deleteNote}
+        />
+      );
     case 'add':
       return <AddNote setCurrentPage={setCurrentPage} addNote={addNote} />;
     case 'edit':
@@ -45,12 +52,16 @@ const App = () => {
     ]);
   };
 
+  const deleteNote = (id) => {
+    setNoteList(noteList.filter((note) => note.id !== id));
+  };
   return (
     <CurrentPageWidget
       currentPage={currentPage}
       setCurrentPage={setCurrentPage}
       noteList={noteList}
       addNote={addNote}
+      deleteNote={deleteNote}
     />
   );
 };

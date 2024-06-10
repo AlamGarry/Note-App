@@ -6,4 +6,4 @@
 
 - [x] Add note
 - [x] Delete note
-- [ ] Edit note
+- [x] Edit note

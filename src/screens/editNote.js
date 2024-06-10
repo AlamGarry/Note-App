@@ -1,11 +1,25 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Alert } from 'react-native';
 import CustomButton from '../components/customButton';
 import CustomTextInput from '../components/customTextInput';
 
 const EditNote = ({ setCurrentPage, selectedNote, editNote }) => {
-  const [title, setTitle] = useState(selectedNote.title || '');
-  const [desc, setDesc] = useState(selectedNote.desc || '');
+  const [title, setTitle] = useState(selectedNote.title);
+  const [desc, setDesc] = useState(selectedNote.desc);
+
+  const kosong = () => {
+    if (!title || !desc) {
+      alert('Harap isi semua kolom');
+      return;
+    }
+    Alert.alert('Submit', 'Apakah anda yakin ingin mengupdate note ini?', [
+      {
+        text: 'Batal',
+        onPress: () => {},
+      },
+      { text: 'Ya', onPress: () => onSubmit() },
+    ]);
+  };
 
   const onSubmit = () => {
     editNote(selectedNote.id, { title, desc });
@@ -41,7 +55,7 @@ const EditNote = ({ setCurrentPage, selectedNote, editNote }) => {
           text='Simpan'
           width='100%'
           onPress={() => {
-            onSubmit();
+            kosong();
           }}
         />
       </View>

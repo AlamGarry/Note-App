@@ -7,13 +7,20 @@ const AddNote = ({ setCurrentPage, addNote }) => {
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
 
+  const onSubmit = () => {
+    addNote({ title, desc });
+    setTitle('');
+    setDesc('');
+    setCurrentPage('home');
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.pageTitle}>Tambahkan Note</Text>
       <CustomTextInput
         text={title}
-        onChange={setTitle}
         label='Judul'
+        onChange={setTitle}
         placeholder='Judul'
         numberOfLines={1}
         multiline={false}
@@ -23,7 +30,6 @@ const AddNote = ({ setCurrentPage, addNote }) => {
         text={desc}
         onChange={setDesc}
         label='Deskripsi'
-        placeholder='Deskripsi'
         multiline
         numberOfLines={4}
       />
@@ -33,20 +39,21 @@ const AddNote = ({ setCurrentPage, addNote }) => {
           color='white'
           text='Simpan'
           width='100%'
-          // Jalankan function addNote dan arahkan kembali layar ke Home
           onPress={() => {
-            addNote(title, desc);
-            setCurrentPage('home');
+            onSubmit();
           }}
         />
       </View>
+
       <View style={styles.spacerTop}>
         <CustomButton
-          backgroundColor='#DDDDDD'
+          backgroundColor='#DDD'
           color='#203239'
           text='Kembali ke Home'
           width='100%'
-          onPress={() => setCurrentPage('home')}
+          onPress={() => {
+            setCurrentPage('home');
+          }}
         />
       </View>
     </View>

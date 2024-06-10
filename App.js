@@ -5,10 +5,13 @@ import EditNote from './src/screens/editNote';
 
 const CurrentPageWidget = ({
   currentPage,
-  noteList,
   setCurrentPage,
+  noteList,
   addNote,
   deleteNote,
+  findNote,
+  selectedNote,
+  editNote,
 }) => {
   switch (currentPage) {
     case 'home':
@@ -17,53 +20,91 @@ const CurrentPageWidget = ({
           noteList={noteList}
           setCurrentPage={setCurrentPage}
           deleteNote={deleteNote}
+          findNote={findNote}
+        />
+      );
+    case 'edit':
+      return (
+        <EditNote
+          setCurrentPage={setCurrentPage}
+          selectedNote={selectedNote}
+          editNote={editNote}
         />
       );
     case 'add':
       return <AddNote setCurrentPage={setCurrentPage} addNote={addNote} />;
-    case 'edit':
-      return <EditNote />;
     default:
-      return <Home />;
+      return (
+        <Home
+          noteList={noteList}
+          setCurrentPage={setCurrentPage}
+          deleteNote={deleteNote}
+          findNote={findNote}
+        />
+      );
   }
 };
 
-const App = () => {
-  const [currentPage, setCurrentPage] = useState('home');
-
+export default function App() {
   const [noteList, setNoteList] = useState([
     {
       id: 1,
-      title: 'Note pertama',
-      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
+      title: 'Note Pertama',
+      desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
     },
   ]);
+  const [currentPage, setCurrentPage] = useState('');
+  const [selectedNote, setSelectedNote] = useState(null);
 
-  const addNote = (title, desc) => {
+  const addNote = ({ title, desc }) => {
     const id = noteList.length > 0 ? noteList[noteList.length - 1].id + 1 : 1;
 
-    setNoteList([
-      ...noteList,
-      {
-        id,
-        title: title,
-        desc: desc,
-      },
-    ]);
+    const note = {
+      id,
+      title,
+      desc,
+    };
+
+    setNoteList([...noteList, note]);
   };
 
-  const deleteNote = (id) => {
-    setNoteList(noteList.filter((note) => note.id !== id));
+  const findNote = (noteId) => {
+    const note = noteList.find((note) => note.id === noteId);
+    setSelectedNote(note);
+    setCurrentPage('edit');
   };
+
+  const editNote = (noteId, updateNote) => {
+    const updatedNote = noteList.map((note) => {
+      if (note.id === noteId) {
+        return {
+          id: note.id,
+          title: updateNote.title,
+          desc: updateNote.desc,
+        };
+      }
+
+      return note;
+    });
+
+    setNoteList(updatedNote);
+  };
+
+  const deleteNote = (noteId) => {
+    const updatedNotes = noteList.filter((note) => note.id !== noteId);
+    setNoteList(updatedNotes);
+  };
+
   return (
     <CurrentPageWidget
       currentPage={currentPage}
       setCurrentPage={setCurrentPage}
       noteList={noteList}
       addNote={addNote}
+      editNote={editNote}
       deleteNote={deleteNote}
+      findNote={findNote}
+      selectedNote={selectedNote}
     />
   );
-};
-
-export default App;
+}

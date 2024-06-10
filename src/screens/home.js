@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList, StyleSheet, View, Text } from 'react-native';
 import CustomButton from '../components/customButton';
 
-const NoteCard = ({ item, setCurrentPage, deleteNote }) => (
+const NoteCard = ({ item, deleteNote, findNote }) => (
   <View style={styles.card}>
     <Text style={styles.cardTitle}>{item.title}</Text>
     <Text>{item.desc}</Text>
@@ -14,7 +14,7 @@ const NoteCard = ({ item, setCurrentPage, deleteNote }) => (
         fontSize={12}
         width={100}
         onPress={() => {
-          setCurrentPage('edit');
+          findNote(item.id);
         }}
       />
       <CustomButton
@@ -23,37 +23,41 @@ const NoteCard = ({ item, setCurrentPage, deleteNote }) => (
         text='Hapus'
         fontSize={12}
         width={100}
-        onPress={() => deleteNote(item.id)}
+        onPress={() => {
+          deleteNote(item.id);
+        }}
       />
     </View>
   </View>
 );
 
-const Home = ({ noteList, setCurrentPage, deleteNote }) => (
-  <View style={styles.container}>
-    <CustomButton
-      backgroundColor='#DDD'
-      color='#203239'
-      text='Tambahkan Note'
-      width='100%'
-      onPress={() => {
-        setCurrentPage('add');
-      }}
-    />
-    <FlatList
-      showsVerticalScrollIndicator={false}
-      data={noteList}
-      renderItem={({ item }) => (
-        <NoteCard
-          item={item}
-          setCurrentPage={setCurrentPage}
-          deleteNote={deleteNote}
+const Home = ({ noteList, setCurrentPage, deleteNote, findNote }) => {
+  return (
+    <View style={styles.container}>
+      <CustomButton
+        backgroundColor='#DDD'
+        color='#203239'
+        text='Tambahkan Note'
+        width='100%'
+        onPress={() => {
+          setCurrentPage('add');
+        }}
+      />
+      {noteList.length > 0 ? (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={noteList}
+          renderItem={({ item }) => (
+            <NoteCard item={item} deleteNote={deleteNote} findNote={findNote} />
+          )}
+          keyExtractor={(item) => item.id}
         />
+      ) : (
+        <Text style={styles.textNoteFound}>Tidak ada catatan...</Text>
       )}
-      keyExtractor={(item) => item.id}
-    />
-  </View>
-);
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -61,25 +65,31 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     padding: 20,
+    marginTop: 10,
   },
   card: {
+    borderWidth: 2,
+    borderColor: '#DDD',
     padding: 10,
     marginVertical: 15,
-    borderColor: '#DDD',
-    borderWidth: 2,
     borderRadius: 5,
   },
   cardTitle: {
-    fontWeight: '600',
-    color: '#203239',
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: 'bold',
     marginBottom: 5,
   },
   buttons: {
-    marginTop: 10,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    marginVertical: 5,
+  },
+  textNoteFound: {
+    textAlign: 'center',
+    marginTop: 30,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
